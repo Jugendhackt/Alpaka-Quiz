@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="bg-primary">
+<html lang="de">
 <head>
     <title>Alpaka Quiz</title>
     <link href="/webjars/bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
@@ -14,32 +14,40 @@
     enabled. Please enable
     Javascript and reload this page!</h2></noscript>
 
-<div class="container">
-    <div class=" alert-info alert">
-        <form onsubmit="joinGame(); return false;">
-            <div class="form-row align-items-center">
-                <div class="col-sm-12 my-1">
-                    <label class="sr-only" for="quiz_pin">Quiz Pin</label>
-                    <input type="number" class="form-control" id="quiz_pin" placeholder="Quiz Pin">
+<div id="join" style="display: none">
+    <div class="container">
+        <div class="alert-info alert">
+            <form onsubmit="joinGame(); return false;">
+                <div class="form-row align-items-center">
+                    <div class="col-sm-12 my-1">
+                        <label class="sr-only" for="quiz_pin">Quiz Pin</label>
+                        <input class="form-control" id="quiz_pin" placeholder="Quiz Pin" type="number">
+                    </div>
+                    <div class="col-sm-12 my-1">
+                        <label class="sr-only" for="team_name">Team name</label>
+                        <input class="form-control" id="team_name" placeholder="Team name" type="text">
+                    </div>
+                    <div class="col-sm-12 my-1">
+                        <button class="btn btn-danger col-sm-12" type="submit">Join</button>
+                    </div>
                 </div>
-                <div class="col-sm-12 my-1">
-                    <label class="sr-only" for="team_name">Team name</label>
-                    <input type="text" class="form-control" id="team_name" placeholder="Team name">
-                </div>
-                <div class="col-sm-12 my-1">
-                    <button type="submit" class="btn btn-danger col-sm-12">Join</button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container" id="loader">
+    <div class="text-center text-danger">
+        <div class="spinner-border" role="status" style="width: 30rem; height: 30rem;">
+            <span class="sr-only">Loading...</span>
+        </div>
     </div>
 </div>
 
-<!-- Modal -->
 <div class="modal fade" id="joinErrorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">An error occurred while joining the game!</h5>
+                <h5 class="modal-title">An error occurred while joining the game!</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

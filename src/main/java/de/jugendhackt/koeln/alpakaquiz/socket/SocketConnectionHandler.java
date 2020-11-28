@@ -9,10 +9,12 @@ import de.jugendhackt.koeln.alpakaquiz.data.QuizState;
 import de.jugendhackt.koeln.alpakaquiz.data.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.util.HtmlUtils;
+
+import javax.annotation.Nullable;
+import java.security.Principal;
 
 @Controller
 public class SocketConnectionHandler {
@@ -21,8 +23,7 @@ public class SocketConnectionHandler {
     private SimpMessagingTemplate template;
 
     @MessageMapping("/join")
-    @SendTo("/topic/greetings")
-    public void joinGame(String message) {
+    public void joinGame(Principal sessionId, String message) {
         JsonObject json = JsonParser.parseString(message).getAsJsonObject();
         if (!json.has("quiz_pin") || !json.has("team_name")) {
             return;
@@ -34,36 +35,48 @@ public class SocketConnectionHandler {
             teamName = HtmlUtils.htmlEscape(json.get("team_name").getAsString());
         } catch (Exception e) {
             e.printStackTrace();
-            sendError("Bad input");
+            setJoinStatus(sessionId, JoinStatues.FAILED, "Bad input");
             return;
         }
         Quiz quiz = Games.games.get(quizPin);
         if (quiz == null) {
             // ToDO
-            sendError("Unknown Quiz");
+            setJoinStatus(sessionId, JoinStatues.FAILED, "Unknown Quiz");
             return;
         }
         if (quiz.getState() != QuizState.WAITING_FOR_CLIENTS) {
-            sendError("Quiz started already");
+            setJoinStatus(sessionId, JoinStatues.FAILED, "Quiz started already");
             return;
         }
         Team team = quiz.getTeams().get(teamName);
         if (team != null) {
-            sendError("Team joined already");
+            setJoinStatus(sessionId, JoinStatues.FAILED, "Team joined already");
             return;
         }
         quiz.getTeams().put(teamName, new Team(teamName));
         System.out.printf("Add team %s to quiz %s%n", teamName, quizPin);
+        setJoinStatus(sessionId, JoinStatues.JOINED, null);
     }
 
-    public void sendError(String message) {
+    public void setJoinStatus(Principal sessionId, JoinStatues status, @Nullable String message) {
         JsonObject payload = new JsonObject();
-        payload.addProperty("status", "failed");
-        payload.addProperty("message", message);
-        sendJson("/join/error", payload);
+        if (status == JoinStatues.FAILED) {
+            payload.addProperty("status", "failed");
+        } else {
+            payload.addProperty("status", "success");
+        }
+        if (message != null) {
+            payload.addProperty("message", message);
+        }
+        sendJson(sessionId, "/join/error", payload);
     }
 
-    public void sendJson(String channel, JsonObject jsonObject) {
-        template.convertAndSend(channel, new Gson().toJson(jsonObject));
+    public void sendJson(Principal sessionId, String channel, JsonObject jsonObject) {
+        template.convertAndSendToUser(sessionId.getName(), channel, new Gson().toJson(jsonObject));
+    }
+
+    enum JoinStatues {
+        FAILED,
+        JOINED
     }
 }
