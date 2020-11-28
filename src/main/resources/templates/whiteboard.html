@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Alpaka Quiz</title>
+    <link href="/webjars/bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/4.5.3/js/bootstrap.min.js"></script>
+    <script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/2.3.3-1/stomp.min.js"></script>
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/whiteboard.css" rel="stylesheet">
+</head>
+<body>
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable Javascript and reload this page!</h2></noscript>
+
+<div class="container" id="joining" style="display: none">
+    <h1>
+        <div class="alert alert-dark" role="alert">
+            <div style="text-align: center;"> Quiz Pin: <span class="badge badge-dark" id="joiningQuizPin">123 123 12</span></div>
+        </div>
+    </h1>
+    <div class="container-fluid">
+        <form onsubmit="startQuiz(); return false;">
+            <button class="btn btn-success col-md-12" type="submit">Start Game</button>
+        </form>
+    </div>
+    <br>
+    <div>
+        <h1>
+            <div style="text-align: center;"><span id="joiningTeamsNumber">0</span> Participators</div>
+        </h1>
+    </div>
+
+    <div class="container-fluid ">
+        <div class="row" id="joiningTeams">
+        </div>
+    </div>
+</div>
+
+<div class="container" id="question" style="display: none">
+    <h1>
+        <div class="alert alert-dark" role="alert">
+            <div id="questionQuestion" style="text-align: center;"> What is your favourite color?</div>
+        </div>
+    </h1>
+    <div>
+        <h1>
+            <div id="questionTime" style="text-align: center;"> 20</div>
+        </h1>
+    </div>
+
+    <div class="container-fluid h-100">
+        <div class="row h-75 h1">
+            <span class="bg-success h-50 w-50" id="questionAnswerGreen">Green</span>
+            <span class="bg-danger h-50 w-50" id="questionAnswerRed">Red</span>
+            <span class="bg-warning h-50 w-50" id="questionAnswerYellow">Yellow</span>
+            <span class="bg-primary h-50 w-50" id="questionAnswerBlue">Blue</span>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="creating" style="display: none">
+    <form onsubmit="createQuiz(); return false;">
+        <button class="btn btn-success" type="submit">Create Quiz</button>
+    </form>
+</div>
+
+<div class="container" id="loader">
+    <div class="text-center text-danger">
+        <div class="spinner-border" role="status" style="width: 30rem; height: 30rem;">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/framework.js"></script>
+<script src="/js/whiteboard.js"></script>
+</html>
+

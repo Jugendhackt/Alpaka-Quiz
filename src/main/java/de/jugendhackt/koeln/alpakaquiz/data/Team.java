@@ -1,15 +1,23 @@
 package de.jugendhackt.koeln.alpakaquiz.data;
 
+import java.security.Principal;
+
 public class Team {
     final String name;
+    final Principal principal;
     int score;
 
-    public Team(String name) {
+    public Team(String name, Principal principal) {
         this.name = name;
+        this.principal = principal;
     }
 
     public String getName() {
         return name;
+    }
+
+    public Principal getPrincipal() {
+        return principal;
     }
 
     public int getScore() {
