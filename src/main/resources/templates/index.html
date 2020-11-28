@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html class="bg-primary">
+<head>
+    <title>Alpaka Quiz</title>
+    <link href="/webjars/bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/4.5.3/js/bootstrap.min.js"></script>
+    <script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/2.3.3-1/stomp.min.js"></script>
+    <link href="/css/main.css" rel="stylesheet">
+</head>
+<body>
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+    enabled. Please enable
+    Javascript and reload this page!</h2></noscript>
+
+<div class="container">
+    <div class=" alert-info alert">
+        <form onsubmit="joinGame(); return false;">
+            <div class="form-row align-items-center">
+                <div class="col-sm-12 my-1">
+                    <label class="sr-only" for="quiz_pin">Quiz Pin</label>
+                    <input type="number" class="form-control" id="quiz_pin" placeholder="Quiz Pin">
+                </div>
+                <div class="col-sm-12 my-1">
+                    <label class="sr-only" for="team_name">Team name</label>
+                    <input type="text" class="form-control" id="team_name" placeholder="Team name">
+                </div>
+                <div class="col-sm-12 my-1">
+                    <button type="submit" class="btn btn-danger col-sm-12">Join</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="joinErrorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">An error occurred while joining the game!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="joinErrorModalText">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="$('#joinErrorModal').modal('hide');">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="/js/app.js"></script>
+</html>
+
