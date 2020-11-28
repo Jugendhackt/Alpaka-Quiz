@@ -15,7 +15,6 @@ public class Quiz {
     final String quizId = Util.generateRandomString(128);
     QuizState state = QuizState.WAITING_FOR_CLIENTS;
     HashBiMap<Principal, Team> teams = HashBiMap.create();
-    ArrayList<Question> askedQuestions = new ArrayList<>();
     ArrayList<Question> questions = new ArrayList<>(Arrays.asList(new Question(), new Question(), new Question()));
     Question currentQuestion;
 
@@ -36,15 +35,14 @@ public class Quiz {
         return teams;
     }
 
-    public ArrayList<Question> getAskedQuestions() {
-        return askedQuestions;
-    }
-
     public ArrayList<Question> getQuestions() {
         return questions;
     }
 
     public void addTeam(Team team) {
+        if (teams.size() > 50) {
+            throw new RuntimeException("Maximum count of teams exceeded!");
+        }
         teams.put(team.getPrincipal(), team);
         JsonObject payload = new JsonObject();
         payload.addProperty("name", team.getName());
@@ -52,6 +50,9 @@ public class Quiz {
     }
 
     public void nextQuestion() {
+        if (state == QuizState.WAITING_FOR_ANSWERS || state == QuizState.FINISHED) {
+            return;
+        }
         setState(QuizState.WAITING_FOR_ANSWERS);
         currentQuestion = questions.get(new Random().nextInt(questions.size()));
         questions.remove(currentQuestion);
@@ -62,7 +63,22 @@ public class Quiz {
         payload.add("answers", currentQuestion.getAnswersAsJson());
 
         JsonSocketSender.INSTANCE.sendJson(whiteboard, "whiteboard/question", payload);
+        teams.forEach((principal, team) -> {
+            JsonSocketSender.INSTANCE.sendJson(principal, "whiteboard/question", payload);
+        });
     }
+
+    public void showAnswers() {
+        setState(QuizState.WAITING_FOR_NEXT_QUESTION);
+
+        JsonObject result = currentQuestion.getResults();
+
+        currentQuestion = null;
+
+        JsonSocketSender.INSTANCE.sendJson(whiteboard, "whiteboard/answers", result);
+        teams.forEach((principal, team) -> JsonSocketSender.INSTANCE.sendJson(principal, "whiteboard/answers", result));
+    }
+
 
     public void start() {
         nextQuestion();
@@ -87,5 +103,9 @@ public class Quiz {
             }
         }
         return null;
+    }
+
+    public Question getCurrentQuestion() {
+        return currentQuestion;
     }
 }

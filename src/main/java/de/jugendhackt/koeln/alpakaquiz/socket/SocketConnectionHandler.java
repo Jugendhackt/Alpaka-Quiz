@@ -2,10 +2,7 @@ package de.jugendhackt.koeln.alpakaquiz.socket;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import de.jugendhackt.koeln.alpakaquiz.data.Quiz;
-import de.jugendhackt.koeln.alpakaquiz.data.QuizState;
-import de.jugendhackt.koeln.alpakaquiz.data.Quizzes;
-import de.jugendhackt.koeln.alpakaquiz.data.Team;
+import de.jugendhackt.koeln.alpakaquiz.data.*;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.util.HtmlUtils;
@@ -25,7 +22,7 @@ public class SocketConnectionHandler {
         int quizPin;
         String teamName;
         try {
-            quizPin = json.get("quiz_pin").getAsInt();
+            quizPin = Integer.parseInt(json.get("quiz_pin").getAsString().replaceAll("\\s", ""));
             teamName = HtmlUtils.htmlEscape(json.get("team_name").getAsString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,8 +45,40 @@ public class SocketConnectionHandler {
             return;
         }
         quiz.addTeam(new Team(teamName, principal));
-        System.out.printf("Add team %s to quiz %s%n", teamName, quizPin);
         setJoinStatus(principal, JoinStatues.JOINED, quiz.getQuizId());
+    }
+
+    @MessageMapping("/vote")
+    public void vote(Principal principal, String message) {
+        JsonObject json = JsonParser.parseString(message).getAsJsonObject();
+        if (!json.has("quiz_id") || !json.has("answer")) {
+            System.out.println("Malformed request");
+            return;
+        }
+        Quiz quiz = Quizzes.getQuizById(json.get("quiz_id").getAsString());
+        if (quiz == null) {
+            System.out.println("Unknown quiz");
+            return;
+        }
+        if (quiz.getState() != QuizState.WAITING_FOR_ANSWERS) {
+            System.out.println("Wrong state");
+            return;
+        }
+        Team team = quiz.getTeamByPrincipal(principal);
+        if (team == null) {
+            System.out.println("Unknown team");
+            return;
+        }
+        QuizColors answer = QuizColors.valueOf(json.get("answer").getAsString().toUpperCase());
+
+        quiz.getCurrentQuestion().answerTeam(team, answer);
+
+        // check if all teams voted
+
+        if (quiz.getCurrentQuestion().getGivenAnswers().size() == quiz.getTeams().size()) {
+            quiz.showAnswers();
+        }
+
     }
 
     public void setJoinStatus(Principal principal, JoinStatues status, @Nullable String message) {

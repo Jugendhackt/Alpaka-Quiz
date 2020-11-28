@@ -28,42 +28,39 @@ const elements = {
     LOADER: 1,
     QUESTION_SHOW: 2,
     JOINING: 3,
-    CREATING: 4
+    CREATING: 4,
+    ANSWERS: 5
 };
 
 let currentElement = elements.LOADER;
 
-const questionElement = $("#question");
-const joiningElement = $("#joining");
+const JOINING_ELEMENT = $("#joining");
 const CREATING_ELEMENT = $("#creating");
 
 
 function switchToElement(element) {
-    loaderElement.css("display", "none");
-    joiningElement.css("display", "none");
-    questionElement.css("display", "none");
+    LOADER_ELEMENT.css("display", "none");
+    JOINING_ELEMENT.css("display", "none");
+    QUESTION_ELEMENT.css("display", "none");
     CREATING_ELEMENT.css("display", "none");
+    ANSWER_ELEMENT.css(("display"), "none");
 
-    if (element === elements.QUESTION_SHOW) {
-        questionElement.css("display", "inline");
+    if (element === elements.ANSWERS) {
+        ANSWER_ELEMENT.css("display", "inline");
+    } else if (element === elements.QUESTION_SHOW) {
+        QUESTION_ELEMENT.css("display", "inline");
     } else if (element === elements.CREATING) {
         CREATING_ELEMENT.css("display", "inline");
     } else if (element === elements.JOINING) {
-        joiningElement.css("display", "inline");
+        JOINING_ELEMENT.css("display", "inline");
     } else {
-        loaderElement.css("display", "inline");
+        LOADER_ELEMENT.css("display", "inline");
     }
     currentElement = element;
 }
 
 const JOINING_QUIZ_PIN = $("#joiningQuizPin");
 
-const QUESTION_QUESTION = $("#questionQuestion");
-const QUESTION_TIME = $("#questionTime");
-const QUESTION_ANSWER_RED = $("#questionAnswerRed");
-const QUESTION_ANSWER_BLUE = $("#questionAnswerBlue");
-const QUESTION_ANSWER_GREEN = $("#questionAnswerGreen");
-const QUESTION_ANSWER_YELLOW = $("#questionAnswerYellow");
 
 let quizId;
 
@@ -79,42 +76,7 @@ function onConnect() {
 
         switchToElement(elements.JOINING);
     });
-    stompClient.subscribe('/user/whiteboard/question', function (data) {
-        data = JSON.parse(data.body)
 
-        QUESTION_QUESTION.val(data["question"]);
-
-        let answers = data["answers"];
-        if (answers.hasOwnProperty("red")) {
-            QUESTION_ANSWER_RED.show();
-            QUESTION_ANSWER_RED.text(answers["red"]);
-        } else {
-            QUESTION_ANSWER_RED.hide();
-        }
-        if (answers.hasOwnProperty("blue")) {
-            QUESTION_ANSWER_BLUE.show();
-            QUESTION_ANSWER_BLUE.text(answers["blue"]);
-        } else {
-            QUESTION_ANSWER_BLUE.hide();
-        }
-        if (answers.hasOwnProperty("yellow")) {
-            QUESTION_ANSWER_YELLOW.show();
-            QUESTION_ANSWER_YELLOW.text(answers["yellow"]);
-        } else {
-            QUESTION_ANSWER_YELLOW.hide();
-        }
-        if (answers.hasOwnProperty("green")) {
-            QUESTION_ANSWER_GREEN.show();
-            QUESTION_ANSWER_GREEN.text(answers["green"]);
-        } else {
-            QUESTION_ANSWER_GREEN.hide();
-        }
-
-
-        quizId = data["quiz_id"]
-
-        switchToElement(elements.QUESTION_SHOW);
-    });
     switchToElement(elements.CREATING);
 }
 

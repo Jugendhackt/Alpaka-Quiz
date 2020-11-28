@@ -9,6 +9,7 @@
     <script src="/webjars/stomp-websocket/2.3.3-1/stomp.min.js"></script>
     <link href="/css/main.css" rel="stylesheet">
     <link href="/css/whiteboard.css" rel="stylesheet">
+    <script src="/webjars/chartjs/2.9.3/Chart.min.js"></script>
 </head>
 <body>
 <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable Javascript and reload this page!</h2></noscript>
@@ -37,17 +38,23 @@
     </div>
 </div>
 
+<div class="container" id="answers" style="display: none">
+    <h1>
+        <div class="alert alert-dark" role="alert">
+            <div id="answersQuestion" style="text-align: center;"> What is your favourite color?</div>
+        </div>
+    </h1>
+    <div>
+        <canvas class="bg-light" id="answersChart"></canvas>
+    </div>
+</div>
+
 <div class="container" id="question" style="display: none">
     <h1>
         <div class="alert alert-dark" role="alert">
             <div id="questionQuestion" style="text-align: center;"> What is your favourite color?</div>
         </div>
     </h1>
-    <div>
-        <h1>
-            <div id="questionTime" style="text-align: center;"> 20</div>
-        </h1>
-    </div>
 
     <div class="container-fluid h-100">
         <div class="row h-75 h1">

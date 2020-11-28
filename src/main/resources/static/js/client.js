@@ -4,32 +4,45 @@ function client() {
     connect(onConnect);
 }
 
-const QUIZ_PIN = $("#quiz_pin");
-
-function joinGame() {
-    sendJson("/join", {'quiz_pin': QUIZ_PIN.val(), 'team_name': $("#team_name").val()});
-}
-
-const joinElement = $("#join");
-
 
 let quizId;
+
+const QUIZ_PIN = $("#quiz_pin");
+const JOIN_ELEMENT = $("#join");
+
+function joinGame() {
+    sendJson("/join", {'quiz_pin': QUIZ_PIN.val().replace(" ", ""), 'team_name': $("#team_name").val()});
+}
+
+function answerQuestion(answer) {
+    sendJson("/vote", {'quiz_id': quizId, 'answer': answer});
+    switchToElement(elements.LOADER);
+}
+
 
 const elements = {
     LOADER: 1,
     JOIN_QUIZ: 2,
+    QUESTION_SHOW: 3,
+    ANSWERS: 4
 };
 
 let currentElement = elements.LOADER;
 
 function switchToElement(element) {
-    loaderElement.css("display", "none");
-    joinElement.css("display", "none");
+    LOADER_ELEMENT.css("display", "none");
+    JOIN_ELEMENT.css("display", "none");
+    QUESTION_ELEMENT.css("display", "none");
+    ANSWER_ELEMENT.css(("display"), "none");
 
-    if (element === elements.JOIN_QUIZ) {
-        joinElement.css("display", "inline");
+    if (element === elements.ANSWERS) {
+        ANSWER_ELEMENT.css("display", "inline");
+    } else if (element === elements.QUESTION_SHOW) {
+        QUESTION_ELEMENT.css("display", "inline");
+    } else if (element === elements.JOIN_QUIZ) {
+        JOIN_ELEMENT.css("display", "inline");
     } else {
-        loaderElement.css("display", "inline");
+        LOADER_ELEMENT.css("display", "inline");
     }
     currentElement = element;
 }
