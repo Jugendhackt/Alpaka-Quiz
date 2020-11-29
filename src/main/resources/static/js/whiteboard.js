@@ -10,7 +10,7 @@ function whiteboard() {
     connect(onConnect);
 
     JOINING_URL.text(window.location.protocol + "//" + window.location.hostname);
-    if (window.location.port !== 80 || +window.location.port !== 443) {
+    if (window.location.port !== "" && (window.location.port !== 80 || window.location.port !== 443)) {
         JOINING_URL.text(JOINING_URL.text() + ":" + window.location.port);
     }
 }
