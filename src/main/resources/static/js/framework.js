@@ -9,6 +9,20 @@ const QUESTION_ANSWER_GREEN = $("#questionAnswerGreen");
 const QUESTION_ANSWER_YELLOW = $("#questionAnswerYellow");
 const ANSWERS_QUESTION = $("#answersQuestion");
 const ANSWERS_CHART = $("#answersChart");
+const FINALS_CHARTS = $("#finalCharts");
+
+let ANSWER_CHART_CHART = new Chart(ANSWERS_CHART, {
+    type: 'bar',
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
 
 
 function connect(callback) {
@@ -56,16 +70,42 @@ function connect(callback) {
             let chartData = [];
             let chartColors = [];
 
-            for (const [color, number] of Object.entries(data["answers"])) {
-                chartData.push(number);
+            for (const [color, count] of Object.entries(data["answers"])) {
+                chartData.push(count);
                 chartColorNames.push(color);
                 chartColors.push(hexByColor(color));
             }
 
-            let myBarChart = new Chart(ANSWERS_CHART, {
+            ANSWER_CHART_CHART.reset();
+
+            ANSWER_CHART_CHART.data = {
+                labels: chartColorNames,
+                datasets: [{
+                    label: "# of votes",
+                    data: chartData,
+                    backgroundColor: chartColors
+                }]
+            };
+
+            ANSWER_CHART_CHART.update();
+            switchToElement(elements.ANSWERS);
+        });
+        stompClient.subscribe('/user/whiteboard/finals', function (data) {
+            data = JSON.parse(data.body)
+            let charTeamNames = [];
+            let chartData = [];
+            let chartColors = [];
+
+            for (const [teamName, score] of Object.entries(data)) {
+                chartData.push(score);
+                charTeamNames.push(teamName);
+                chartColors.push(hexByColor(getRandomBootstrapColor()));
+            }
+
+            let myBarChart = new Chart(FINALS_CHARTS, {
                 type: 'bar',
                 data: {
-                    labels: chartColorNames,
+                    labels: charTeamNames,
                     datasets: [{
                         label: "# of votes",
                         data: chartData,
@@ -82,8 +122,7 @@ function connect(callback) {
                     }
                 }
             });
-            switchToElement(elements.ANSWERS);
-
+            switchToElement(elements.FINALS);
         });
     });
 }
@@ -91,9 +130,10 @@ function connect(callback) {
 const LOADER_ELEMENT = $("#loader");
 const QUESTION_ELEMENT = $("#question");
 const ANSWER_ELEMENT = $("#answers");
+const FINAL_ELEMENT = $("#finals");
 
 
-const BOOTSTRAP_COLORS = ["primary", "secondary", "success", "danger", "warning", "info", "dark", "white"]
+const BOOTSTRAP_COLORS = ["primary", "secondary", "success", "danger", "warning", "info", "dark", "light"]
 
 function getRandomBootstrapColor() {
     return BOOTSTRAP_COLORS[Math.floor(Math.random() * BOOTSTRAP_COLORS.length)];
@@ -119,14 +159,30 @@ function chunk(str, n) {
 }
 
 function hexByColor(color) {
+    color = color.toString().toLowerCase();
     switch (color) {
         case "red":
+        case "danger":
             return "#dc3545";
         case "green":
+        case "success":
             return "#28a745";
         case "yellow":
+        case "warning":
             return "#ffc107";
         case "blue":
+        case "primary":
             return "#007bff";
+        case "grey":
+        case "secondary":
+            return "#6c757d";
+        case "info":
+            return "#17a2b8";
+        case "light":
+            return "#f8f9fa";
+        case "dark":
+            return "#343a40";
+        default:
+            return "#123456"
     }
 }

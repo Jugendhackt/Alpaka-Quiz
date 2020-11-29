@@ -17,6 +17,7 @@ public class Quiz {
     HashBiMap<Principal, Team> teams = HashBiMap.create();
     ArrayList<Question> questions = new ArrayList<>(Arrays.asList(new Question(), new Question(), new Question()));
     Question currentQuestion;
+    int totalQuestions;
 
     public Quiz(Principal whiteboard) {
         this.whiteboard = whiteboard;
@@ -53,6 +54,10 @@ public class Quiz {
         if (state == QuizState.WAITING_FOR_ANSWERS || state == QuizState.FINISHED) {
             return;
         }
+        if (questions.size() == 0) {
+            showFinal();
+            return;
+        }
         setState(QuizState.WAITING_FOR_ANSWERS);
         currentQuestion = questions.get(new Random().nextInt(questions.size()));
         questions.remove(currentQuestion);
@@ -61,11 +66,11 @@ public class Quiz {
         payload.addProperty("question", currentQuestion.getQuestion());
         // payload.addProperty("time", currentQuestion.getTime());
         payload.add("answers", currentQuestion.getAnswersAsJson());
+        payload.addProperty("remainingAnswers", questions.size());
+        payload.addProperty("totalQuestions", totalQuestions);
 
         JsonSocketSender.INSTANCE.sendJson(whiteboard, "whiteboard/question", payload);
-        teams.forEach((principal, team) -> {
-            JsonSocketSender.INSTANCE.sendJson(principal, "whiteboard/question", payload);
-        });
+        teams.forEach((principal, team) -> JsonSocketSender.INSTANCE.sendJson(principal, "whiteboard/question", payload));
     }
 
     public void showAnswers() {
@@ -79,6 +84,17 @@ public class Quiz {
         teams.forEach((principal, team) -> JsonSocketSender.INSTANCE.sendJson(principal, "whiteboard/answers", result));
     }
 
+    public void showFinal() {
+        if (state == QuizState.FINISHED) {
+            return;
+        }
+        setState(QuizState.FINISHED);
+        JsonObject json = new JsonObject();
+        teams.forEach((principal, team) -> json.addProperty(team.getName(), team.getScore()));
+
+        JsonSocketSender.INSTANCE.sendJson(whiteboard, "whiteboard/finals", json);
+        teams.forEach((principal, team) -> JsonSocketSender.INSTANCE.sendJson(principal, "whiteboard/finals", json));
+    }
 
     public void start() {
         nextQuestion();

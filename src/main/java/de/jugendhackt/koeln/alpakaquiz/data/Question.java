@@ -6,17 +6,17 @@ import com.google.gson.JsonObject;
 import java.util.HashMap;
 
 public class Question {
-    final String question = "TestQuestion1";
+    final String question = "Seit wann gibt es Jugend hackt?";
     final HashBiMap<QuizColors, String> answers = HashBiMap.create();
     final QuizColors correctAnswer = QuizColors.BLUE;
     final JsonObject json = new JsonObject();
     final HashMap<Team, QuizColors> givenAnswers = new HashMap<>();
 
     public Question() {
-        answers.put(QuizColors.RED, "ROOOOOT");
-        answers.put(QuizColors.BLUE, "BLAAAAAU");
-        answers.put(QuizColors.GREEN, "GRÜÜÜÜÜÜÜN");
-        answers.put(QuizColors.YELLOW, "GEEEEELB");
+        answers.put(QuizColors.RED, "2012");
+        answers.put(QuizColors.BLUE, "2013");
+        answers.put(QuizColors.GREEN, "2016");
+        answers.put(QuizColors.YELLOW, "2020");
 
 
         answers.forEach(((quizColors, answer) -> json.addProperty(quizColors.name().toLowerCase(), answer)));
@@ -46,6 +46,10 @@ public class Question {
             return;
         }
         givenAnswers.put(team, color);
+
+        if (color == correctAnswer) {
+            team.increaseScore();
+        }
     }
 
     public HashMap<Team, QuizColors> getGivenAnswers() {

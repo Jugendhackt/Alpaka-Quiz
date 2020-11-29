@@ -29,7 +29,8 @@ const elements = {
     QUESTION_SHOW: 2,
     JOINING: 3,
     CREATING: 4,
-    ANSWERS: 5
+    ANSWERS: 5,
+    FINALS: 6
 };
 
 let currentElement = elements.LOADER;
@@ -44,9 +45,12 @@ function switchToElement(element) {
     QUESTION_ELEMENT.css("display", "none");
     CREATING_ELEMENT.css("display", "none");
     ANSWER_ELEMENT.css(("display"), "none");
+    FINAL_ELEMENT.css(("display"), "none");
 
     if (element === elements.ANSWERS) {
         ANSWER_ELEMENT.css("display", "inline");
+    } else if (element === elements.FINALS) {
+        FINAL_ELEMENT.css("display", "inline");
     } else if (element === elements.QUESTION_SHOW) {
         QUESTION_ELEMENT.css("display", "inline");
     } else if (element === elements.CREATING) {
@@ -87,5 +91,10 @@ function createQuiz() {
 
 function startQuiz() {
     sendJson("/whiteboard/startGame", {"quiz_id": quizId});
+    switchToElement(elements.LOADER);
+}
+
+function nextQuestion() {
+    sendJson("/whiteboard/nextQuestion", {"quiz_id": quizId});
     switchToElement(elements.LOADER);
 }

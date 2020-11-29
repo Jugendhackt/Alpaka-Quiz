@@ -29,9 +29,12 @@ public class SocketConnectionHandler {
             setJoinStatus(principal, JoinStatues.FAILED, "Bad input");
             return;
         }
+        if (teamName.isBlank() || teamName.length() > 30) {
+            setJoinStatus(principal, JoinStatues.FAILED, "Bad nickname!");
+            return;
+        }
         Quiz quiz = Quizzes.QUIZ_PIN_MAP.get(quizPin);
         if (quiz == null) {
-            // ToDO
             setJoinStatus(principal, JoinStatues.FAILED, "Unknown Quiz");
             return;
         }

@@ -34,9 +34,12 @@ function switchToElement(element) {
     JOIN_ELEMENT.css("display", "none");
     QUESTION_ELEMENT.css("display", "none");
     ANSWER_ELEMENT.css(("display"), "none");
+    FINAL_ELEMENT.css(("display"), "none");
 
     if (element === elements.ANSWERS) {
         ANSWER_ELEMENT.css("display", "inline");
+    } else if (element === elements.FINALS) {
+        FINAL_ELEMENT.css("display", "inline");
     } else if (element === elements.QUESTION_SHOW) {
         QUESTION_ELEMENT.css("display", "inline");
     } else if (element === elements.JOIN_QUIZ) {

@@ -44,8 +44,24 @@
             <div id="answersQuestion" style="text-align: center;"> What is your favourite color?</div>
         </div>
     </h1>
+    <div class="container-fluid">
+        <form onsubmit="nextQuestion(); return false;">
+            <button class="btn btn-danger col-md-12" type="submit">Next Question</button>
+        </form>
+    </div>
     <div>
         <canvas class="bg-light" id="answersChart"></canvas>
+    </div>
+</div>
+
+<div class="container" id="finals" style="display: none">
+    <h1>
+        <div class="alert alert-dark" role="alert">
+            <div style="text-align: center;"> Quiz end!</div>
+        </div>
+    </h1>
+    <div>
+        <canvas class="bg-light" id="finalCharts"></canvas>
     </div>
 </div>
 

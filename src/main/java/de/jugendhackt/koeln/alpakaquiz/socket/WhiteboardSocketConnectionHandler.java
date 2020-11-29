@@ -35,4 +35,14 @@ public class WhiteboardSocketConnectionHandler {
         quiz.start();
     }
 
+    @MessageMapping("/whiteboard/nextQuestion")
+    public void nextQuestion(Principal sessionId, String message) {
+        JsonObject data = JsonParser.parseString(message).getAsJsonObject();
+        Quiz quiz = Quizzes.getQuizById(data.get("quiz_id").getAsString());
+        if (!quiz.isWhiteboard(sessionId)) {
+            return;
+        }
+        quiz.nextQuestion();
+    }
+
 }
