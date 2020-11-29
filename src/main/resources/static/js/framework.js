@@ -1,5 +1,10 @@
-let stompClient = null;
+const LOADER_ELEMENT = $("#loader");
+const QUESTION_ELEMENT = $("#question");
+const ANSWER_ELEMENT = $("#answers");
+const FINAL_ELEMENT = $("#finals");
 
+
+const BOOTSTRAP_COLORS = ["primary", "secondary", "success", "danger", "warning", "info", "dark", "light"]
 
 const QUESTION_QUESTION = $("#questionQuestion");
 const QUESTION_TIME = $("#questionTime");
@@ -11,6 +16,7 @@ const ANSWERS_QUESTION = $("#answersQuestion");
 const ANSWERS_CHART = $("#answersChart");
 const FINALS_CHARTS = $("#finalCharts");
 
+let stompClient = null;
 
 let ANSWER_CHART_CHART = new Chart(ANSWERS_CHART, {
     type: 'bar',
@@ -164,14 +170,6 @@ function connect(callback) {
     });
 }
 
-const LOADER_ELEMENT = $("#loader");
-const QUESTION_ELEMENT = $("#question");
-const ANSWER_ELEMENT = $("#answers");
-const FINAL_ELEMENT = $("#finals");
-
-
-const BOOTSTRAP_COLORS = ["primary", "secondary", "success", "danger", "warning", "info", "dark", "light"]
-
 function getRandomBootstrapColor() {
     return BOOTSTRAP_COLORS[Math.floor(Math.random() * BOOTSTRAP_COLORS.length)];
 }
@@ -214,9 +212,8 @@ function hexByColor(color) {
         case "secondary":
             return "#6c757d";
         case "info":
-            return "#17a2b8";
         case "light":
-            return "#f8f9fa";
+            return "#17a2b8";
         case "dark":
             return "#343a40";
         default:

@@ -21,6 +21,9 @@
             <div style="text-align: center;"> Quiz Pin: <span class="badge badge-dark" id="joiningQuizPin">123 123 12</span></div>
         </div>
     </h1>
+    <div class="alert alert-dark">
+        <a href="#"><h3 id="joiningURL" style="text-align: center">test.de</h3></a>
+    </div>
     <div class="container-fluid">
         <form onsubmit="startQuiz(); return false;">
             <button class="btn btn-success col-md-12" type="submit">Start Game</button>
@@ -81,10 +84,10 @@
 
     <div class="container-fluid h-100">
         <div class="row h-75 h1">
-            <span class="bg-success h-50 w-50" id="questionAnswerGreen">Green</span>
-            <span class="bg-danger h-50 w-50" id="questionAnswerRed">Red</span>
-            <span class="bg-warning h-50 w-50" id="questionAnswerYellow">Yellow</span>
-            <span class="bg-primary h-50 w-50" id="questionAnswerBlue">Blue</span>
+            <button class="button bg-success h-50 w-50" disabled id="questionAnswerGreen" style="color:white">Green</button>
+            <button class="button bg-danger h-50 w-50" disabled id="questionAnswerRed" style="color:white">Red</button>
+            <button class="button bg-warning h-50 w-50" disabled id="questionAnswerYellow" style="color:white">Yellow</button>
+            <button class="button bg-primary h-50 w-50" disabled id="questionAnswerBlue" style="color:white">Blue</button>
         </div>
     </div>
 </div>

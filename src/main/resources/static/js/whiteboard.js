@@ -1,13 +1,20 @@
+const JOIN_TEAMS_ELEMENT = $("#joiningTeams");
+const JOIN_TEAMS_COUNT = $("#joiningTeamsNumber");
+const JOINING_URL = $("#joiningURL");
+const JOINING_ELEMENT = $("#joining");
+const CREATING_ELEMENT = $("#creating");
+
 whiteboard();
 
 function whiteboard() {
     connect(onConnect);
 
+    JOINING_URL.text(window.location.protocol + "//" + window.location.hostname);
+    if (window.location.port !== 80 || +window.location.port !== 443) {
+        JOINING_URL.text(JOINING_URL.text() + ":" + window.location.port);
+    }
 }
 
-
-const JOIN_TEAMS_ELEMENT = $("#joiningTeams");
-const JOIN_TEAMS_COUNT = $("#joiningTeamsNumber");
 
 function addTeam(name) {
     if (currentElement !== elements.JOINING) {
@@ -32,9 +39,6 @@ const elements = {
 };
 
 let currentElement = elements.LOADER;
-
-const JOINING_ELEMENT = $("#joining");
-const CREATING_ELEMENT = $("#creating");
 
 
 function switchToElement(element) {

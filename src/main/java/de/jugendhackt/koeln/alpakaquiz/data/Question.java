@@ -1,24 +1,21 @@
 package de.jugendhackt.koeln.alpakaquiz.data;
 
-import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 
 public class Question {
-    final String question = "Seit wann gibt es Jugend hackt?";
-    final HashBiMap<QuizColors, String> answers = HashBiMap.create();
-    final QuizColors correctAnswer = QuizColors.BLUE;
+    final String question;
+    final HashMap<QuizColors, String> answers;
+    final QuizColors correctAnswer;
     final JsonObject json = new JsonObject();
     final HashMap<Team, QuizColors> givenAnswers = new HashMap<>();
     boolean asked = false;
 
-    public Question() {
-        answers.put(QuizColors.RED, "2012");
-        answers.put(QuizColors.BLUE, "2013");
-        answers.put(QuizColors.GREEN, "2016");
-        answers.put(QuizColors.YELLOW, "2020");
-
+    public Question(String question, HashMap<QuizColors, String> answers, QuizColors correctAnswer) {
+        this.question = question;
+        this.answers = answers;
+        this.correctAnswer = correctAnswer;
 
         answers.forEach(((quizColors, answer) -> json.addProperty(quizColors.name().toLowerCase(), answer)));
     }
@@ -27,7 +24,7 @@ public class Question {
         return question;
     }
 
-    public HashBiMap<QuizColors, String> getAnswers() {
+    public HashMap<QuizColors, String> getAnswers() {
         return answers;
     }
 

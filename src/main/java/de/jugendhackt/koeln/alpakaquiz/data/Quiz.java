@@ -13,12 +13,36 @@ public class Quiz {
     final String quizId = Util.generateRandomString(128);
     QuizState state = QuizState.WAITING_FOR_CLIENTS;
     HashBiMap<Principal, Team> teams = HashBiMap.create();
-    ArrayList<Question> questions = new ArrayList<>(Arrays.asList(new Question(), new Question(), new Question()));
+    ArrayList<Question> questions = new ArrayList<>();
     Question currentQuestion;
     int totalQuestions;
 
     public Quiz(Principal whiteboard) {
         this.whiteboard = whiteboard;
+
+
+        HashMap<QuizColors, String> answers = new HashMap<>();
+        answers.put(QuizColors.RED, "2012");
+        answers.put(QuizColors.BLUE, "2013");
+        answers.put(QuizColors.GREEN, "2016");
+        answers.put(QuizColors.YELLOW, "2020");
+        questions.add(new Question("Seit wann gibt es Jugend hackt?", answers, QuizColors.BLUE));
+
+
+        answers = new HashMap<>();
+        answers.put(QuizColors.RED, "1");
+        answers.put(QuizColors.BLUE, "3");
+        answers.put(QuizColors.GREEN, "5");
+        answers.put(QuizColors.YELLOW, "6");
+        questions.add(new Question("Das wie vielte Jugend Hackt Köln ist das?", answers, QuizColors.YELLOW));
+
+        answers = new HashMap<>();
+        answers.put(QuizColors.RED, "0");
+        answers.put(QuizColors.BLUE, "50");
+        answers.put(QuizColors.GREEN, "100");
+        answers.put(QuizColors.YELLOW, "300");
+        questions.add(new Question("Wie oft haben (ca) wir die Cantina Band angehört?", answers, QuizColors.YELLOW));
+
     }
 
 
