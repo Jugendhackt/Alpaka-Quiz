@@ -58,15 +58,20 @@ public class Question {
 
     public JsonObject getResults() {
         JsonObject json = new JsonObject();
-        JsonObject answersJson = new JsonObject();
+        JsonObject givenAnswersJson = new JsonObject();
+        JsonObject allAnswersJson = new JsonObject();
         HashMap<QuizColors, Integer> answers = new HashMap<>();
-        this.answers.forEach((color, answer) -> answers.put(color, 0));
+        this.answers.forEach((color, answer) -> {
+            answers.put(color, 0);
+            allAnswersJson.addProperty(color.name().toLowerCase(), answer);
+        });
         givenAnswers.forEach((team, answer) -> answers.put(answer, answers.get(answer) + 1));
 
-        answers.forEach((color, count) -> answersJson.addProperty(color.name().toLowerCase(), count));
+        answers.forEach((color, count) -> givenAnswersJson.addProperty(color.name().toLowerCase(), count));
 
         json.addProperty("correct", correctAnswer.name().toLowerCase());
-        json.add("answers", answersJson);
+        json.add("givenAnswers", givenAnswersJson);
+        json.add("allAnswers", allAnswersJson);
         return json;
     }
 }

@@ -74,16 +74,15 @@ function connect(callback) {
             let chartColors = [];
             let borderColor = [];
 
-            for (const [color, count] of Object.entries(data["answers"])) {
+            for (const [color, count] of Object.entries(data["givenAnswers"])) {
                 chartData.push(count);
                 chartColors.push(hexByColor(color));
                 if (data["correct"] === color) {
                     borderColor.push("rgb(104, 34,139)")
-                    console.log("Right answer: " + data["correct"]);
-                    chartColorNames.push("[" + color + "]");
+                    chartColorNames.push("[" + data["allAnswers"][color] + "]");
                 } else {
                     borderColor.push("rgba(0, 0, 0, 0, 0)")
-                    chartColorNames.push(color);
+                    chartColorNames.push(data["allAnswers"][color]);
                 }
             }
 
