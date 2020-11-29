@@ -17,13 +17,14 @@ let ANSWER_CHART_CHART = new Chart(ANSWERS_CHART, {
         scales: {
             yAxes: [{
                 ticks: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    precision: 0
                 }
             }]
         },
         legend: {
             display: false
-        },
+        }
     }
 });
 
