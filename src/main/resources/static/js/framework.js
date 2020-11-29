@@ -144,7 +144,7 @@ function connect(callback) {
                 data: {
                     labels: charTeamNames,
                     datasets: [{
-                        label: "# of correct votes",
+                        label: "Points",
                         data: chartData,
                         backgroundColor: chartColors
                     }]

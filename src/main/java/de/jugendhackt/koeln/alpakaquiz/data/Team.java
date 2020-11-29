@@ -31,4 +31,8 @@ public class Team {
     public void increaseScore() {
         score++;
     }
+
+    public void addScore(int score) {
+        this.score += score;
+    }
 }

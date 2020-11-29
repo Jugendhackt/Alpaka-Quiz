@@ -49,7 +49,7 @@ public class Question {
         givenAnswers.put(team, color);
 
         if (color == correctAnswer) {
-            team.increaseScore();
+            team.addScore(500 / givenAnswers.size());
         }
     }
 
