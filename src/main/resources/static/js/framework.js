@@ -11,6 +11,7 @@ const ANSWERS_QUESTION = $("#answersQuestion");
 const ANSWERS_CHART = $("#answersChart");
 const FINALS_CHARTS = $("#finalCharts");
 
+
 let ANSWER_CHART_CHART = new Chart(ANSWERS_CHART, {
     type: 'bar',
     options: {
@@ -28,6 +29,28 @@ let ANSWER_CHART_CHART = new Chart(ANSWERS_CHART, {
     }
 });
 
+let TIMER_TIMER = -1;
+let TIMER_INTERVAL = setInterval(() => {
+    if (TIMER_TIMER < 0) {
+        return;
+    }
+    TIMER_TIMER--;
+    if (TIMER_TIMER === 0) {
+        if (currentElement === elements.QUESTION_SHOW) {
+            switchToElement(elements.LOADER);
+            return;
+        }
+    }
+    QUESTION_TIME.text(TIMER_TIMER);
+
+
+}, 1000);
+
+
+function setTimer(seconds) {
+    TIMER_TIMER = seconds;
+    QUESTION_TIME.text(TIMER_TIMER);
+}
 
 function connect(callback) {
     let socket = new SockJS('/ws');
@@ -65,6 +88,7 @@ function connect(callback) {
             } else {
                 QUESTION_ANSWER_GREEN.hide();
             }
+            setTimer(20);
 
             switchToElement(elements.QUESTION_SHOW);
         });
@@ -120,7 +144,7 @@ function connect(callback) {
                 data: {
                     labels: charTeamNames,
                     datasets: [{
-                        label: "# of votes",
+                        label: "# of correct votes",
                         data: chartData,
                         backgroundColor: chartColors
                     }]

@@ -6,9 +6,7 @@ import de.jugendhackt.koeln.alpakaquiz.socket.JsonSocketSender;
 import de.jugendhackt.koeln.alpakaquiz.util.Util;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 public class Quiz {
     final Principal whiteboard;
@@ -58,8 +56,23 @@ public class Quiz {
             showFinal();
             return;
         }
+        final Question currentQuestion = questions.get(new Random().nextInt(questions.size()));
+        this.currentQuestion = currentQuestion;
+        new Timer().schedule(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (currentQuestion.isAlreadyAsked()) {
+                            return;
+                        }
+                        showAnswers();
+                    }
+                },
+                20000
+        );
+
+
         setState(QuizState.WAITING_FOR_ANSWERS);
-        currentQuestion = questions.get(new Random().nextInt(questions.size()));
         questions.remove(currentQuestion);
 
         JsonObject payload = new JsonObject();
@@ -74,6 +87,9 @@ public class Quiz {
     }
 
     public void showAnswers() {
+        if (state != QuizState.WAITING_FOR_ANSWERS) {
+            return;
+        }
         setState(QuizState.WAITING_FOR_NEXT_QUESTION);
 
         JsonObject result = currentQuestion.getResults();

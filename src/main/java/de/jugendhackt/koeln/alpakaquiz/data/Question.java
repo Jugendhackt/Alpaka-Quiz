@@ -11,6 +11,7 @@ public class Question {
     final QuizColors correctAnswer = QuizColors.BLUE;
     final JsonObject json = new JsonObject();
     final HashMap<Team, QuizColors> givenAnswers = new HashMap<>();
+    boolean asked = false;
 
     public Question() {
         answers.put(QuizColors.RED, "2012");
@@ -72,6 +73,11 @@ public class Question {
         json.addProperty("correct", correctAnswer.name().toLowerCase());
         json.add("givenAnswers", givenAnswersJson);
         json.add("allAnswers", allAnswersJson);
+        asked = true;
         return json;
+    }
+
+    public boolean isAlreadyAsked() {
+        return asked;
     }
 }

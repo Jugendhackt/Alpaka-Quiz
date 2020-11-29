@@ -20,8 +20,6 @@ function addTeam(name) {
         color = getRandomBootstrapColor();
     }
     JOIN_TEAMS_ELEMENT.append('<span class="m-1 alert alert-' + color + '">' + name + '</span>')
-
-
 }
 
 const elements = {
